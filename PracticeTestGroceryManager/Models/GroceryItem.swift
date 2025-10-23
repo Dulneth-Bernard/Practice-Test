@@ -1,4 +1,3 @@
-
 import Foundation
 
 struct GroceryItem: Identifiable {
@@ -7,4 +6,7 @@ struct GroceryItem: Identifiable {
     var price: Double
     let imageName: String
     var quantity: Int
+    var totalValue: Double {
+            Double(quantity) * price
+        }
 }

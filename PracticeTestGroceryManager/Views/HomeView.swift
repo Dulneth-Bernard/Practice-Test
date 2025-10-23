@@ -6,24 +6,15 @@
 //
 
 import SwiftUI
+    
+    struct HomeView: View {
+        @EnvironmentObject var viewModel: GroceryItemViewModel
 
-struct HomeView: View {
-    @State private var groceryItems: [GroceryItem] = [
-        GroceryItem(name: "Broccoli", price: 8.00, imageName: "broccoli", quantity: 0),
-        GroceryItem(name: "Banana", price: 10.00, imageName: "banana", quantity: 0),
-        GroceryItem(name: "Avocado", price: 7.00, imageName: "avocado", quantity: 0),
-        GroceryItem(name: "Chicken", price: 20.00, imageName: "chicken", quantity: 0),
-        GroceryItem(name: "Water", price: 5.00, imageName: "water", quantity: 0)
-    ]
-    
-    @State private var showCart = false
-    
-    var body: some View {
-        NavigationView {
-            VStack {
+        var body: some View {
+            NavigationView {
                 List {
                     Section(header: Text("Select Grocery Items")) {
-                        ForEach($groceryItems) { $item in
+                        ForEach($viewModel.groceryItems) { $item in
                             HStack {
                                 Image(item.imageName)
                                     .resizable()
@@ -50,33 +41,21 @@ struct HomeView: View {
                         }
                     }
                 }
-                .listStyle(.insetGrouped)
-                
-            
-                NavigationLink(destination: CartView(), isActive: $showCart) {
-                    EmptyView()
-                }
-                .hidden()
-                
-                Button(action: {
-                    showCart = true
-                }) {
-                    Text("Checkout")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.green)
-                        .cornerRadius(12)
-                        .padding(.horizontal)
-                        .padding(.bottom, 10)
+                .navigationTitle("Buy Fresh Groceries")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        NavigationLink(destination: CartView().environmentObject(viewModel)) {
+                            Text("Checkout")
+                                .bold()
+                        }
+                    }
                 }
             }
-            .navigationTitle("Buy Fresh Groceries")
         }
     }
-}
 
-#Preview {
+#Preview{
     HomeView()
+        .environmentObject(GroceryItemViewModel())
+
 }
