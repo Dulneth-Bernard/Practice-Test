@@ -8,13 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var groceryItems: [GroceryItem] = [
-        GroceryItem(name: "Broccoli", price: 8.00, imageName: "broccoli", quantity: 0),
-        GroceryItem(name: "Banana", price: 10.00, imageName: "banana", quantity: 0),
-        GroceryItem(name: "Avocado", price: 7.00, imageName: "avocado", quantity: 0),
-        GroceryItem(name: "Chicken", price: 20.00, imageName: "chicken", quantity: 0),
-        GroceryItem(name: "Water", price: 5.00, imageName: "water", quantity: 0)
-    ]
+    @StateObject private var groceryItemViewModel = GroceryItemViewModel()
     
     @State private var showCart = false
     
@@ -23,7 +17,7 @@ struct HomeView: View {
             VStack {
                 List {
                     Section(header: Text("Select Grocery Items")) {
-                        ForEach($groceryItems) { $item in
+                        ForEach(groceryItemViewModel.items ) { item in
                             HStack {
                                 Image(item.imageName)
                                     .resizable()
@@ -41,7 +35,12 @@ struct HomeView: View {
                                 
                                 Spacer()
                                 
-                                Stepper(value: $item.quantity, in: 0...10) {
+                                Stepper(value: Binding(
+                                    get: { item.quantity },
+                                    set: { newValue in
+                                        groceryItemViewModel.updateQuantity(for: item, quantity: newValue)
+                                    }
+                                ), in: 0...10) {
                                     Text("\(item.quantity)")
                                 }
                                 .frame(width: 120)
