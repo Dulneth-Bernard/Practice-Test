@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct PracticeTestGroceryManagerApp: App {
+    @StateObject var viewModel = GroceryItemViewModel()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
+                .environmentObject(viewModel)
         }
     }
 }
