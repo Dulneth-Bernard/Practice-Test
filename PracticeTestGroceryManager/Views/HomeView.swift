@@ -16,47 +16,63 @@ struct HomeView: View {
         GroceryItem(name: "Water", price: 5.00, imageName: "water", quantity: 0)
     ]
     
+    @State private var showCart = false
+    
     var body: some View {
         NavigationView {
-            List {
-                Section(header: Text("Select Grocery Items")) {
-                    ForEach($groceryItems) { $item in
-                        HStack {
-                            Image(item.imageName)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 50, height: 50)
-                                .padding(.trailing, 10)
-                            
-                            VStack(alignment: .leading) {
-                                Text(item.name)
-                                    .font(.headline)
-                                Text(String(format: "$%.2f per item", item.price))
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
+            VStack {
+                List {
+                    Section(header: Text("Select Grocery Items")) {
+                        ForEach($groceryItems) { $item in
+                            HStack {
+                                Image(item.imageName)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 50, height: 50)
+                                    .padding(.trailing, 10)
+                                
+                                VStack(alignment: .leading) {
+                                    Text(item.name)
+                                        .font(.headline)
+                                    Text(String(format: "$%.2f per item", item.price))
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Spacer()
+                                
+                                Stepper(value: $item.quantity, in: 0...10) {
+                                    Text("\(item.quantity)")
+                                }
+                                .frame(width: 120)
                             }
-                            
-                            Spacer()
-                            
-            
-                            Stepper(value: $item.quantity, in: 0...10) {
-                                Text("\(item.quantity)")
-                            }
-                            .frame(width: 120)
+                            .padding(.vertical, 5)
                         }
-                        .padding(.vertical, 5)
                     }
+                }
+                .listStyle(.insetGrouped)
+                
+            
+                NavigationLink(destination: CartView(), isActive: $showCart) {
+                    EmptyView()
+                }
+                .hidden()
+                
+                Button(action: {
+                    showCart = true
+                }) {
+                    Text("Checkout")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(12)
+                        .padding(.horizontal)
+                        .padding(.bottom, 10)
                 }
             }
             .navigationTitle("Buy Fresh Groceries")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: CartView()) {
-                        Text("Checkout")
-                            .bold()
-                    }
-                }
-            }
         }
     }
 }
