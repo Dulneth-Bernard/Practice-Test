@@ -6,3 +6,16 @@
 //
 
 import Foundation
+
+class GroceryItemViewModel: ObservableObject {
+    @Published var items: [GroceryItem] = []
+
+    func add(item: GroceryItem ) {
+        items.append(item)
+    }
+    
+    func remove(atOffsets offsets: IndexSet) {
+        items.remove(atOffsets: offsets)
+    }
+    
+}
